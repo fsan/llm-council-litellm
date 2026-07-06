@@ -1,0 +1,46 @@
+# LiteLLM proxy model registry.
+# `model_name` is the alias the backend sends in the "model" field.
+# `litellm_params.model` is the real provider route. Ollama Cloud exposes an
+# OpenAI-compatible endpoint, so we use the generic `openai/<model>` provider
+# with a custom api_base for each ollama model.
+#
+# Env vars (os.environ/<NAME>) are loaded from the .env file passed to the
+# litellm-proxy service in docker-compose.yml.
+model_list:
+  - model_name: ollama/glm-5.2:cloud
+    litellm_params:
+      model: openai/glm-5.2:cloud
+      api_base: https://ollama.com/v1
+      api_key: os.environ/OLLAMA_API_KEY
+
+  - model_name: ollama/deepseek-v4-pro:cloud
+    litellm_params:
+      model: openai/deepseek-v4-pro:cloud
+      api_base: https://ollama.com/v1
+      api_key: os.environ/OLLAMA_API_KEY
+
+  - model_name: ollama/qwen3.5:cloud
+    litellm_params:
+      model: openai/qwen3.5:cloud
+      api_base: https://ollama.com/v1
+      api_key: os.environ/OLLAMA_API_KEY
+
+  - model_name: ollama/gemma4:cloud
+    litellm_params:
+      model: openai/gemma4:cloud
+      api_base: https://ollama.com/v1
+      api_key: os.environ/OLLAMA_API_KEY
+
+  - model_name: ollama/deepseek-v4-flash:cloud
+    litellm_params:
+      model: openai/deepseek-v4-flash:cloud
+      api_base: https://ollama.com/v1
+      api_key: os.environ/OLLAMA_API_KEY
+
+#  - model_name: openai/gpt-5-mini
+#    litellm_params:
+#      model: openai/gpt-5-mini
+#      api_key: os.environ/OPENAI_API_KEY
+
+general_settings:
+  master_key: os.environ/LITELLM_MASTER_KEY

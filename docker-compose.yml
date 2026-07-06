@@ -1,0 +1,42 @@
+services:
+  # LiteLLM proxy: OpenAI-compatible gateway routing model aliases to
+  # Ollama Cloud / OpenAI. Holds the real per-provider keys.
+  litellm-proxy:
+    image: ghcr.io/berriai/litellm:main-stable
+    ports:
+      - "4000:4000"
+    volumes:
+      - ./litellm_config.yaml:/app/config.yaml:ro
+    env_file: .env
+    command: --config /app/config.yaml --port 4000
+    restart: unless-stopped
+
+  # FastAPI backend (council orchestration + storage)
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8001:8001"
+    volumes:
+      - ./data:/app/data
+    env_file: .env
+    environment:
+      # Reaches the proxy over the compose network (service DNS name).
+      LITELLM_API_URL: http://litellm-proxy:4000/v1/chat/completions
+    depends_on:
+      - litellm-proxy
+    restart: unless-stopped
+
+  # Frontend SPA served by nginx on the host's 5173.
+  # The browser calls the backend directly at http://localhost:8001
+  # (already allowed by backend CORS for http://localhost:5173).
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "5173:80"
+    depends_on:
+      - backend
+    restart: unless-stopped

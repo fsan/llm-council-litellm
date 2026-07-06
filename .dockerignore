@@ -1,0 +1,18 @@
+# Python
+.venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+
+# Local data / secrets (mounted at runtime instead)
+data/
+.env
+
+# Frontend build artifacts & deps (rebuilt in the image)
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+
+# VCS / docs not needed in images
+.git/
+.gitignore

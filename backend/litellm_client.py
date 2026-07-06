@@ -1,8 +1,13 @@
-"""OpenRouter API client for making LLM requests."""
+"""LiteLLM proxy client for making LLM requests.
+
+This replaces the previous OpenRouter client. Requests go to a LiteLLM
+proxy (OpenAI-compatible /v1/chat/completions endpoint) which routes each
+model alias to its real provider (Ollama Cloud, OpenAI, etc.).
+"""
 
 import httpx
 from typing import List, Dict, Any, Optional
-from .config import OPENROUTER_API_KEY, OPENROUTER_API_URL
+from .config import LITELLM_API_KEY, LITELLM_API_URL
 
 
 async def query_model(
@@ -11,10 +16,10 @@ async def query_model(
     timeout: float = 120.0
 ) -> Optional[Dict[str, Any]]:
     """
-    Query a single model via OpenRouter API.
+    Query a single model via the LiteLLM proxy.
 
     Args:
-        model: OpenRouter model identifier (e.g., "openai/gpt-4o")
+        model: LiteLLM proxy model alias (e.g. "openai/gpt-5-mini")
         messages: List of message dicts with 'role' and 'content'
         timeout: Request timeout in seconds
 
@@ -22,7 +27,7 @@ async def query_model(
         Response dict with 'content' and optional 'reasoning_details', or None if failed
     """
     headers = {
-        "Authorization": f"Bearer {OPENROUTER_API_KEY}",
+        "Authorization": f"Bearer {LITELLM_API_KEY}",
         "Content-Type": "application/json",
     }
 
@@ -34,7 +39,7 @@ async def query_model(
     try:
         async with httpx.AsyncClient(timeout=timeout) as client:
             response = await client.post(
-                OPENROUTER_API_URL,
+                LITELLM_API_URL,
                 headers=headers,
                 json=payload
             )
@@ -61,11 +66,11 @@ async def query_models_parallel(
     Query multiple models in parallel.
 
     Args:
-        models: List of OpenRouter model identifiers
+        models: List of LiteLLM proxy model aliases
         messages: List of message dicts to send to each model
 
     Returns:
-        Dict mapping model identifier to response dict (or None if failed)
+        Dict mapping model alias to response dict (or None if failed)
     """
     import asyncio
 

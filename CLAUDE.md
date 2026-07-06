@@ -11,12 +11,13 @@ LLM Council is a 3-stage deliberation system where multiple LLMs collaboratively
 ### Backend Structure (`backend/`)
 
 **`config.py`**
-- Contains `COUNCIL_MODELS` (list of OpenRouter model identifiers)
+- Contains `COUNCIL_MODELS` (list of LiteLLM proxy model aliases)
 - Contains `CHAIRMAN_MODEL` (model that synthesizes final answer)
-- Uses environment variable `OPENROUTER_API_KEY` from `.env`
+- Contains `TITLE_MODEL` (cheap/fast model for conversation titles)
+- Uses environment variable `LITELLM_API_KEY` from `.env` (bearer token for the LiteLLM proxy; must equal the proxy's `LITELLM_MASTER_KEY`). The proxy holds the real per-provider keys (`OPENAI_API_KEY`, `OLLAMA_API_KEY`).
 - Backend runs on **port 8001** (NOT 8000 - user had another app on 8000)
 
-**`openrouter.py`**
+**`litellm_client.py`** (was `openrouter.py`)
 - `query_model()`: Single async model query
 - `query_models_parallel()`: Parallel queries using `asyncio.gather()`
 - Returns dict with 'content' and optional 'reasoning_details'
@@ -143,7 +144,7 @@ Models are hardcoded in `backend/config.py`. Chairman can be same or different f
 
 ## Testing Notes
 
-Use `test_openrouter.py` to verify API connectivity and test different model identifiers before adding to council. The script tests both streaming and non-streaming modes.
+Smoke-test model aliases directly against the proxy (`curl http://localhost:4000/v1/chat/completions ...`) before adding them to the council. Model aliases must match the `model_name` entries in `litellm_config.yaml`.
 
 ## Data Flow Summary
 
