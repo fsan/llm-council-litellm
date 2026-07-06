@@ -1,5 +1,11 @@
 # LLM Council
 
+## About this Fork
+
+This is a fork with mininum changes to use LiteLLM and Ollama models instead of OpenRouter.
+
+---
+
 ![llmcouncil](header.jpg)
 
 The idea of this repo is that instead of asking a question to your favorite LLM provider (e.g. OpenAI GPT-5-mini, Ollama Cloud GLM/DeepSeek/Qwen, etc.), you can group them into your "LLM Council". This repo is a simple, local web app that essentially looks like ChatGPT except it uses a [LiteLLM](https://litellm.ai) proxy to send your query to multiple LLMs, it then asks them to review and rank each other's work, and finally a Chairman LLM produces the final response.
