@@ -13,17 +13,17 @@ LITELLM_API_KEY = os.getenv("LITELLM_API_KEY")
 # See litellm_config.yaml for the provider routing behind each alias.
 #    "ollama/glm-5.2:cloud",
 COUNCIL_MODELS = [
+    "ollama/qwen3.5:122b",
+    "ollama/gemma4:31b",
     "ollama/glm-5.2:cloud",
     "ollama/deepseek-v4-flash:cloud",
-    "ollama/qwen3.5:cloud",
-    "ollama/gemma4:cloud",
 ]
 
 # Chairman model - synthesizes the final response
 CHAIRMAN_MODEL = "ollama/deepseek-v4-pro:cloud"
 
 # Cheap/fast model used to generate short conversation titles
-TITLE_MODEL = "ollama/gemma4:cloud"
+TITLE_MODEL = "ollama/gemma4:31b"
 
 # LiteLLM proxy chat-completions endpoint. Inside docker-compose the proxy
 # is reachable at http://litellm-proxy:4000; override via env for local runs.

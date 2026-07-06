@@ -19,10 +19,8 @@ up:
 	fi
 	@echo ">> Pulling latest base images..."
 	docker compose pull
-	@echo ">> Building images..."
-	docker compose build
-	@echo ">> Starting services..."
-	docker compose up -d
+	@echo ">> Building images and (re)creating containers (forces proxy config reload)..."
+	docker compose up -d --build --force-recreate
 	@echo ">> Frontend: http://localhost:5173  |  Backend: http://localhost:8001  |  Proxy: http://localhost:4000"
 
 # `down`: stop and remove containers + network. Volumes (./data) are preserved.
